@@ -67,3 +67,10 @@ def pruneImageDir(dir_path):
     for file in os.listdir(dir_path):
         file_path = os.path.join(dir_path, file)
         os.remove(file_path)
+
+
+# checks if an index is valid in the images dir
+def validateImageIndex(images_dir, index) -> int:
+    n = len(os.listdir(images_dir))
+
+    return  max(0, min(n-1, index))

@@ -30,7 +30,7 @@ def getScreenshots(code_file_path, images_dir_path, MAX_ELAPSED_TIME=60):
     def image_to_bytes(image):
         return list(image.getdata())
 
-    count = 1
+    count = 0
     prev_screenshot = None
     while time.time() - start_time < MAX_ELAPSED_TIME:
         print(count)
