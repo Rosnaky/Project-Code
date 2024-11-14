@@ -51,8 +51,7 @@ def parseImage(image):
     inputImageB.show()
 
 # Parses all images in the images directory
-def parseAll():
-    dir = "images"
+def parseAll(dir):
     for file in os.listdir(dir):
         filePath = os.path.join(dir, file)
 
@@ -61,3 +60,10 @@ def parseAll():
                 filePath = jpgToPng(filePath)
 
             parseImage(filePath)
+
+
+# removes all current images in the image dir
+def pruneImageDir(dir_path):
+    for file in os.listdir(dir_path):
+        file_path = os.join(dir_path, file)
+        os.remove(file_path)

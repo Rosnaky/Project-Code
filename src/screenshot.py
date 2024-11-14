@@ -47,7 +47,7 @@ def getScreenshots(MAX_ELAPSED_TIME=60):
             break
 
         prev_screenshot = image_to_bytes(screenshot)
-        img_path = f"..\\screenshots\\pic{count}.jpg"
+        img_path = f"..\\screenshots\\  pic{count}.jpg"
         screenshot.save(img_path)
         scroll(-height)
         count += 1
