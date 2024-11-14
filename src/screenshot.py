@@ -13,7 +13,7 @@ Dependencies:
 - pip install keyboard
 """
 
-def getScreenshots(MAX_ELAPSED_TIME=60):
+def getScreenshots(code_file_path, images_dir_path, MAX_ELAPSED_TIME=60):
     # get size of screen
     monitor = get_monitors()[0]
     width = monitor.width
@@ -23,8 +23,7 @@ def getScreenshots(MAX_ELAPSED_TIME=60):
         pyautogui.scroll(height)
 
 
-    file_path = "./screenshot.py"
-    os.system(f'code {file_path}')
+    os.system(f'code {code_file_path}')
     start_time = time.time()
 
 
@@ -47,7 +46,7 @@ def getScreenshots(MAX_ELAPSED_TIME=60):
             break
 
         prev_screenshot = image_to_bytes(screenshot)
-        img_path = f"..\\screenshots\\  pic{count}.jpg"
+        img_path = os.path.join(images_dir_path, f"pic {count}")
         screenshot.save(img_path)
         scroll(-height)
         count += 1
