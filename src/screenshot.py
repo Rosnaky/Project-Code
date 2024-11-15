@@ -72,4 +72,7 @@ def getScreenshots(code_file_path, images_dir_path, MAX_ELAPSED_TIME=60):
         screenshot.save(img_path)
         scroll(-height)
         count += 1
-        time.sleep(0.1)
+        time.sleep(0.5)
+
+# below is an example call of the function
+# screenshotCapture("C:\\Users\\haris\\OneDrive\\Desktop\\SE101\\se101-f2024-triangles\\triangle.c")
