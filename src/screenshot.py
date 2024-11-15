@@ -1,9 +1,12 @@
+# set display to 0
+import os 
+os.environ['DISPLAY'] = ':0'
+
 from PIL import ImageGrab
 import pyautogui
-from screeninfo import get_monitors
+from screeninfo import get_monitors, Monitor
 import keyboard
 import time 
-import os 
 
 """
 Dependencies:
@@ -12,18 +15,35 @@ Dependencies:
 - pip install screeninfo
 - pip install keyboard
 """
+WIDTH = 1024
+HEIGHT = 768
+X_POSITION = 10
+Y_POSITION = 10
 
 def getScreenshots(code_file_path, images_dir_path, MAX_ELAPSED_TIME=60):
     # get size of screen
-    monitor = get_monitors()[0]
+    
+    monitor = Monitor(
+        x=X_POSITION,
+        y=Y_POSITION,
+        width=WIDTH,
+        height=HEIGHT
+    )
+
     width = monitor.width
     height = monitor.height
-    print(f"Screen resolution: {width}x{height}")
+
     def scroll(height):
         pyautogui.scroll(height)
 
+    os.system("export DISPLAY=:0")
+    os.system(f"code {code_file_path}")
+    
+    # Enter full screen
+    keyboard.pressKey_esc()
+    keyboard.pressKey_f11()
 
-    os.system(f'code {code_file_path}')
+    time.sleep(10)
     start_time = time.time()
 
 
@@ -32,21 +52,23 @@ def getScreenshots(code_file_path, images_dir_path, MAX_ELAPSED_TIME=60):
 
     count = 0
     prev_screenshot = None
+
+
     while time.time() - start_time < MAX_ELAPSED_TIME:
-        print(count)
-        # fail safe, stops program if control key is pressed 
-        if keyboard.is_pressed('ctrl'):
+        
+        if (keyboard.terminate):
             break
 
         # take screenshot 
-        screenshot = ImageGrab.grab(bbox =(0.04 * width, 0.075 * height, 0.85 * width, 0.95 * height))
+        screenshot = ImageGrab.grab(bbox =(0, 0, width, height))
+        
         # if the two screenshots are the same that means we've reached the end of our scrollable area 
         if image_to_bytes(screenshot) == prev_screenshot:
-            print("stopped")
             break
 
         prev_screenshot = image_to_bytes(screenshot)
-        img_path = os.path.join(images_dir_path, f"pic {count}")
+        img_path = os.path.join(images_dir_path, f"pic {count}.png")
+        
         screenshot.save(img_path)
         scroll(-height)
         count += 1

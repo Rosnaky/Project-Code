@@ -7,14 +7,16 @@ import time
 
 # import custom modules
 import screenshot
+
 import imageProcessing
 
 # Variables
-MAX_ELAPSED_TIME = 10
-CODE_IMAGES_DIR_PATH = os.getenv("IMAGES_DIR_PATH")
-
 load_dotenv()
+
+MAX_ELAPSED_TIME = 1
+CODE_IMAGES_DIR_PATH = os.getenv("IMAGES_DIR_PATH")
 FILE_UPLOAD_DIR = os.getenv("FILE_UPLOAD_DIR_PATH")
+# end Variables
 
 app = Flask(__name__)
 
@@ -29,24 +31,19 @@ def success():
         f = request.files["file"]
         f.save(os.path.join(FILE_UPLOAD_DIR, f.filename))
 
-        time.sleep(5)
-
-        redirect(f"/code/{filename}/0")
-
         return render_template("fileUploadSuccess.html", filename=f.filename)
 
 
-@app.route("/code/<filename>/<imageIndeximage>")
+@app.route("/code/<filename>/<imageIndex>")
 def code(filename, imageIndex):
-    imageIndex = imageProcessing.validateImageIndex(CODE_IMAGES_DIR_PATH, imageIndex)
+    file_path = os.path.join(FILE_UPLOAD_DIR, filename)
+    imageIndex = int(imageIndex)
         
-
-    f = os.path.join(FILE_UPLOAD_DIR, filename)
-    index = int(imageIndex)
+    imageIndex = imageProcessing.validateImageIndex(CODE_IMAGES_DIR_PATH, imageIndex)
 
     # Create thread to get images
     get_images_thread = Thread(target = screenshot.getScreenshots(
-        MAX_ELAPSED_TIME=MAX_ELAPSED_TIME, code_file_path=FILE_UPLOAD_DIR, 
+        MAX_ELAPSED_TIME=MAX_ELAPSED_TIME, code_file_path=file_path, 
         images_dir_path=CODE_IMAGES_DIR_PATH))
     
     get_images_thread.start()
@@ -56,8 +53,14 @@ def code(filename, imageIndex):
 
 
 if (__name__ == "__main__"):
-    
     # remove all images in images dir
-    imageProcessing.pruneImageDir(CODE_IMAGES_DIR_PATH)
-
-    app.run(host="0.0.0.0", port=8000)
+    imageProcessing.pruneDir(CODE_IMAGES_DIR_PATH)
+    
+    port = 8000
+    while 1:
+        try: 
+            app.run(host="0.0.0.0", port=port)
+        except:
+            port += 1
+            continue
+        break

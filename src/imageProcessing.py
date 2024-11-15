@@ -63,9 +63,9 @@ def parseAll(dir):
 
 
 # removes all current images in the image dir
-def pruneImageDir(dir_path):
-    for file in os.listdir(dir_path):
-        file_path = os.path.join(dir_path, file)
+def pruneDir(dir_path):
+    for fname in os.listdir(dir_path):
+        file_path = os.path.join(dir_path, fname)
         os.remove(file_path)
 
 
