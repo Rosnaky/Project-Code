@@ -37,6 +37,8 @@ def getScreenshots(code_file_path, images_dir_path, MAX_ELAPSED_TIME=60):
         pyautogui.scroll(height)
 
     os.system("export DISPLAY=:0")
+    # * Enable on prod
+    # os.system("sudo pkill -f code")
     os.system(f"code {code_file_path}")
     
     # Enter full screen
